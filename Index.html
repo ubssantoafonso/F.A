@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ficha de Atendimento (F.A.)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Simple animation for record appearance */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .record-card {
+            animation: fadeIn 0.3s ease-out;
+        }
+        /* Modal styles */
+        .modal-overlay {
+            animation: fadeIn 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-700">Sistema de Ficha de Atendimento (F.A.)</h1>
+            <p class="text-gray-500 mt-2">Gerencie os atendimentos de forma rápida e eficiente.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <!-- Formulário de Atendimento -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-6 border-b pb-4">Nova Ficha de Atendimento</h2>
+                <form id="fa-form">
+                    <!-- Seção de Identificação -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-600">1. Identificação do Paciente</h3>
+                        <div>
+                            <label for="gmus" class="block text-sm font-medium text-gray-700">G'mus / ID do Atendimento</label>
+                            <input type="text" id="gmus" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Ex: PAC2024-001">
+                        </div>
+                        <div>
+                            <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                            <input type="text" id="nome" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Nome do paciente">
+                        </div>
+                        <div>
+                            <label for="nascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+                            <input type="date" id="nascimento" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-gray-600 pt-4">2. Data e Hora</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="data" class="block text-sm font-medium text-gray-700">Data do Atendimento</label>
+                                <input type="date" id="data" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="hora" class="block text-sm font-medium text-gray-700">Hora do Atendimento</label>
+                                <input type="time" id="hora" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-gray-600 pt-4">3. Sinais Vitais</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                             <div>
+                                <label for="pa" class="block text-sm font-medium text-gray-700">PA (mmHg)</label>
+                                <input type="text" id="pa" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="120/80">
+                            </div>
+                            <div>
+                                <label for="fc" class="block text-sm font-medium text-gray-700">FC (bpm)</label>
+                                <input type="number" id="fc" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="80">
+                            </div>
+                            <div>
+                                <label for="fr" class="block text-sm font-medium text-gray-700">FR (irpm)</label>
+                                <input type="number" id="fr" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="16">
+                            </div>
+                            <div>
+                                <label for="temp" class="block text-sm font-medium text-gray-700">Temp (°C)</label>
+                                <input type="number" step="0.1" id="temp" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="36.5">
+                            </div>
+                            <div>
+                                <label for="spo2" class="block text-sm font-medium text-gray-700">SpO₂ (%)</label>
+                                <input type="number" id="spo2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="98">
+                            </div>
+                             <div>
+                                <label for="dor" class="block text-sm font-medium text-gray-700">Dor (0-10)</label>
+                                <input type="number" id="dor" min="0" max="10" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="7">
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-gray-600 pt-4">4. Anamnese</h3>
+                        <div>
+                            <label for="sintomas" class="block text-sm font-medium text-gray-700">Sintomas / Queixa Principal</label>
+                            <textarea id="sintomas" rows="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Descreva os sintomas do paciente..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                            <i class="fas fa-save mr-2"></i> Salvar Ficha
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Histórico de Atendimentos -->
+            <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-6 border-b pb-4">Histórico de Atendimentos</h2>
+                <div id="records-container" class="space-y-4 max-h-[80vh] overflow-y-auto pr-2">
+                    <!-- Fichas salvas serão inseridas aqui -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden modal-overlay">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <i class="fas fa-exclamation-triangle text-red-600 fa-lg"></i>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Excluir Ficha</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">
+                        Tem certeza que deseja excluir esta ficha? Esta ação não pode ser desfeita.
+                    </p>
+                </div>
+                <div class="flex justify-center items-center px-4 py-3 space-x-4">
+                    <button id="cancel-delete-btn" class="px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-md w-auto shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors">
+                        Cancelar
+                    </button>
+                    <button id="confirm-delete-btn" class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-auto shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                        Sim, Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('fa-form');
+            const recordsContainer = document.getElementById('records-container');
+            const dataInput = document.getElementById('data');
+            const horaInput = document.getElementById('hora');
+            
+            // Modal elements
+            const modal = document.getElementById('delete-modal');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            let recordIdToDelete = null;
+
+            // Função para formatar a data para o input
+            const getFormattedDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            // Função para formatar a hora para o input
+            const getFormattedTime = (date) => {
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}`;
+            };
+
+            // Define a data e hora atuais no formulário
+            const setDateTime = () => {
+                const now = new Date();
+                dataInput.value = getFormattedDate(now);
+                horaInput.value = getFormattedTime(now);
+            };
+
+            // Função para buscar dados do localStorage
+            const getRecords = () => {
+                return JSON.parse(localStorage.getItem('fa_records')) || [];
+            };
+
+            // Função para salvar dados no localStorage
+            const saveRecords = (records) => {
+                localStorage.setItem('fa_records', JSON.stringify(records));
+            };
+
+            // Função para renderizar as fichas na tela
+            const renderRecords = () => {
+                const records = getRecords();
+                recordsContainer.innerHTML = ''; // Limpa o container
+
+                if (records.length === 0) {
+                    recordsContainer.innerHTML = `<div class="text-center text-gray-500 p-8">
+                        <i class="fas fa-folder-open fa-3x mb-4"></i>
+                        <p>Nenhuma ficha de atendimento encontrada.</p>
+                        <p class="text-sm">Preencha o formulário para começar.</p>
+                    </div>`;
+                    return;
+                }
+                
+                records.sort((a, b) => new Date(b.id) - new Date(a.id));
+
+                records.forEach(record => {
+                    const recordEl = document.createElement('div');
+                    recordEl.className = 'record-card bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm';
+                    
+                    const idade = record.nascimento ? `${new Date().getFullYear() - new Date(record.nascimento).getFullYear()} anos` : 'N/A';
+                    const dataAtendimento = new Date(`${record.data}T${record.hora}`).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                    const horaAtendimento = record.hora;
+
+                    recordEl.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-indigo-700">${record.nome}</h4>
+                                <p class="text-sm text-gray-500">ID: ${record.gmus || 'Não informado'} | Idade: ${idade}</p>
+                                <p class="text-sm text-gray-500">Atendimento: ${dataAtendimento} às ${horaAtendimento}</p>
+                            </div>
+                            <div>
+                                <button class="delete-btn text-red-500 hover:text-red-700 transition-colors" data-id="${record.id}" title="Excluir Ficha">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-t pt-4">
+                            <p class="font-semibold text-sm">Sintomas:</p>
+                            <p class="text-sm text-gray-600 whitespace-pre-wrap">${record.sintomas || 'Nenhum sintoma descrito.'}</p>
+                            <details class="mt-3 text-sm">
+                                <summary class="cursor-pointer text-indigo-600 hover:underline font-medium">Ver Sinais Vitais</summary>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2 bg-white p-3 rounded">
+                                    <p><strong>PA:</strong> ${record.pa || 'N/A'}</p>
+                                    <p><strong>FC:</strong> ${record.fc ? record.fc + ' bpm' : 'N/A'}</p>
+                                    <p><strong>FR:</strong> ${record.fr ? record.fr + ' irpm' : 'N/A'}</p>
+                                    <p><strong>Temp:</strong> ${record.temp ? record.temp + ' °C' : 'N/A'}</p>
+                                    <p><strong>SpO₂:</strong> ${record.spo2 ? record.spo2 + ' %' : 'N/A'}</p>
+                                    <p><strong>Dor:</strong> ${record.dor || 'N/A'}</p>
+                                </div>
+                            </details>
+                        </div>
+                    `;
+                    recordsContainer.appendChild(recordEl);
+                });
+            };
+
+            // Event listener para o formulário
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const newRecord = {
+                    id: new Date().toISOString(),
+                    gmus: document.getElementById('gmus').value,
+                    nome: document.getElementById('nome').value,
+                    nascimento: document.getElementById('nascimento').value,
+                    data: document.getElementById('data').value,
+                    hora: document.getElementById('hora').value,
+                    pa: document.getElementById('pa').value,
+                    fc: document.getElementById('fc').value,
+                    fr: document.getElementById('fr').value,
+                    temp: document.getElementById('temp').value,
+                    spo2: document.getElementById('spo2').value,
+                    dor: document.getElementById('dor').value,
+                    sintomas: document.getElementById('sintomas').value,
+                };
+
+                const records = getRecords();
+                records.push(newRecord);
+                saveRecords(records);
+
+                renderRecords();
+                form.reset();
+                setDateTime();
+            });
+
+            // --- Lógica do Modal de Exclusão ---
+
+            // Abre o modal
+            recordsContainer.addEventListener('click', (e) => {
+                const deleteButton = e.target.closest('.delete-btn');
+                if (deleteButton) {
+                    recordIdToDelete = deleteButton.dataset.id;
+                    modal.classList.remove('hidden');
+                }
+            });
+
+            // Fecha o modal ao clicar em "Cancelar" ou fora dele
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                recordIdToDelete = null;
+            };
+
+            cancelDeleteBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Confirma a exclusão
+            confirmDeleteBtn.addEventListener('click', () => {
+                if (recordIdToDelete) {
+                    let records = getRecords();
+                    records = records.filter(record => record.id !== recordIdToDelete);
+                    saveRecords(records);
+                    renderRecords();
+                    closeModal();
+                }
+            });
+
+            // Inicialização
+            setDateTime();
+            renderRecords();
+        });
+    </script>
+</body>
+</html>
